@@ -146,7 +146,12 @@ print compute_costMAE()
 
 
 
-
+'''
+After adding Standard deviation feature to code some changes might be happened to the calculation. I am not sure
+There still some blanks to fill
+I need to re-look all of the code
+For second task text parsing should be added.  May be logictic regression should be added as well.
+'''
 
 
 
