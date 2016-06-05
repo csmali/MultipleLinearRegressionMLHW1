@@ -2,10 +2,10 @@ from xlrd import open_workbook
 import copy
 
 #Evaluate the linear regression
-NUMBER_OF_STUDENTS=649
-NUMBER_OF_TEST = 130
-NUMBER_OF_TRAINING = 519
-wb = open_workbook('/home/mali/Desktop/MLHW1/MultipleLinearRegressionMLHW1/student-porxls.xls')
+NUMBER_OF_STUDENTS=1049
+NUMBER_OF_TEST = 209
+NUMBER_OF_TRAINING = 840
+wb = open_workbook('/home/mali/Desktop/MLHW1/MultipleLinearRegressionMLHW1/default_plus_chromatic_features_1059_tracks.xls')
 samples = []
 test = []
 mean_r=[]
@@ -40,7 +40,7 @@ def feature_normalize(X,ind):
 	return X_norm
 	
 theta = []
-for i in range(0,36):
+for i in range(0,69):
 	theta.append(0)
 
 iterations = 300
@@ -59,11 +59,11 @@ def gradient_descent(X,theta, alpha, num_iters):
         	predictions[row]=ytemp 
 		ytemp=0
 	# size of theta 36
-	theta_size = 36
+	theta_size = 68
 	errorsum=0
 	for it in range(theta_size):
 		for row in range(0, NUMBER_OF_TRAINING-1):
-			errorsum = errorsum + (X[row][36]-predictions[row])*X[row][it]
+			errorsum = errorsum + (X[row][68]-predictions[row])*X[row][it]
 		theta[it] = theta[it] + alpha * errorsum
 		errorsum=0
     #    theta_size = theta.size 
@@ -77,94 +77,7 @@ def readExcel(rowArray,startIndexofRowArray,LastIndexofRowArray):
 		number_of_rows=NUMBER_OF_TRAINING
 		for row in range(startIndexofRowArray, LastIndexofRowArray):
 			sample = []
-			for cell in range(0,31):
-				
-				if isinstance(sheet.cell(row,cell).value, basestring):
-					#index of Mjob column is here sample array gains 2 more index cell cell +1 cell +2
-					if cell == 8:
-						
-						sample.append(0)
-						sample.append(0)
-						sample.append(0)
-				
-						if sheet.cell(row,cell).value == 'at_home':
-							sample[cell]=-1;
-						elif sheet.cell(row,cell).value == 'services':
-							sample[cell]=1;
-						elif sheet.cell(row,cell).value == 'other':
-							sample[cell+1]=-1;
-						elif sheet.cell(row,cell).value == 'health':
-							sample[cell+1]=+1;
-						elif sheet.cell(row,cell).value == 'teacher':
-							sample[cell+2]=-1;
-					
-					#index of Fjob column is here sample array gains 2 more index cell cell +1 cell +2
-					elif cell == 9:
-						sample.append(0)
-						sample.append(0)
-						sample.append(0)
-				
-						if sheet.cell(row,cell).value == 'at_home':
-							sample[cell+2]=-1;
-						elif sheet.cell(row,cell).value == 'services':
-							sample[cell+2]=1;
-						elif sheet.cell(row,cell).value == 'other':
-							sample[cell+3]=-1;
-						elif sheet.cell(row,cell).value == 'health':
-							sample[cell+3]=+1;
-						elif sheet.cell(row,cell).value == 'teacher':
-							sample[cell+4]=-1;
-						
-					#index of reason column is here sample array gains 1 more index cell cell +1 
-					elif cell == 10:
-						sample.append(0)
-						sample.append(0)
-						if sheet.cell(row,cell).value == 'home':
-							sample[cell+4]=-1;
-						elif sheet.cell(row,cell).value == 'reputation':
-							sample[cell+4]=1;
-						elif sheet.cell(row,cell).value == 'course':
-							sample[cell+5]=-1;
-						elif sheet.cell(row,cell).value == 'other':
-							sample[cell+5]=+1;
-					#index of guardian column is here sample array gains 1 more index cell cell +1 
-					elif cell == 11:
-						sample.append(0)
-						sample.append(0)
-						if sheet.cell(row,cell).value == 'mother':
-							sample[cell+5]=-1;
-						elif sheet.cell(row,cell).value == 'father':
-							sample[cell+5]=1;
-						elif sheet.cell(row,cell).value == 'other':
-							sample[cell+6]=-1;
-
-					elif sheet.cell(row,cell).value == 'GP':
-						sample.append(1)
-					elif sheet.cell(row,cell).value == 'MS':
-						sample.append(-1)
-					elif sheet.cell(row,cell).value == 'F':
-						sample.append(1)
-					elif sheet.cell(row,cell).value == 'M':
-						sample.append(-1)
-					elif sheet.cell(row,cell).value == 'U':
-						sample.append(1)
-					elif sheet.cell(row,cell).value == 'R':
-						sample.append(-1)
-					elif sheet.cell(row,cell).value == 'LE3':
-						sample.append(1)
-					elif sheet.cell(row,cell).value == 'GT3':
-						sample.append(-1)
-					elif sheet.cell(row,cell).value == 'T':
-						sample.append(1)
-					elif sheet.cell(row,cell).value == 'A':
-						sample.append(-1)
-					elif sheet.cell(row,cell).value == 'yes':
-						sample.append(1)
-					elif sheet.cell(row,cell).value == 'no':
-						sample.append(-1)
-					else:
-						sample.append(0)
-				else:
+			for cell in range(0,69):
 					sample.append(sheet.cell(row,cell).value)
 			rowArray.append(sample)
 
@@ -179,19 +92,19 @@ test =readExcel(test,1,NUMBER_OF_TEST)
 samples = readExcel(samples,1,NUMBER_OF_TRAINING)
 
 
-samples = feature_normalize(samples,37)
-test =readExcel(test,NUMBER_OF_TRAINING,650)
+samples = feature_normalize(samples,69)
+test =readExcel(test,NUMBER_OF_TRAINING,1049)
 
 # sum( [a[i][0]*b[i] for i in range(len(b))] ) dot product 
 for counter in range(0,NUMBER_OF_TEST-1):
 
-	for cell in range(0,36):
+	for cell in range(0,68):
 		test[counter][cell] = test[counter][cell]-mean_r[cell]
 
 
 theta = gradient_descent(samples, theta, alpha, iterations)
 
-normalizedTestData = feature_normalize(test,36)
+normalizedTestData = feature_normalize(test,68)
 #print theta
 #print len(samples[1]), "length of every sample"
 
@@ -201,7 +114,7 @@ normalizedTestData = feature_normalize(test,36)
 #print len(normalizedTestData[1]) , "length NTD"
 #print samples[1]
 
-print mean_r[36]
+#print mean_r[68]
 #print len(samples)
 #for row in range(0, NUMBER_OF_TEST):	
 	#print sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36] , "   " ,row, ". data icin hesap"
@@ -222,42 +135,40 @@ def compute_costMAE():
 def compute_costMSETRAINING():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TRAINING-2):
-
-		sumofErrors = sumofErrors + ((sum(samples[row][i]*theta[i] for i in range(len(theta)))- test[row][36]) ** 2)
-	sumofErrors = sumofErrors / NUMBER_OF_TRAINING-2
-
+		sumofErrors = sumofErrors + ((sum(samples[row][i]*theta[i] for i in range(len(theta)))- samples[row][68]) ** 2)
+	sumofErrors = sumofErrors / (NUMBER_OF_TRAINING-2)
+	print sumofErrors
    	return sumofErrors
 
 def compute_costMAETRAINING():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TRAINING-2):
-
-		sumofErrors = sumofErrors + ((sum(samples[row][i]*theta[i] for i in range(len(theta))) - test[row][36]))
-	sumofErrors = sumofErrors / NUMBER_OF_TRAINING-2
+		sumofErrors = sumofErrors +  ((sum(samples[row][i]*theta[i] for i in range(len(theta))) - samples[row][68]))
+	sumofErrors = sumofErrors / (NUMBER_OF_TRAINING-2)
 
    	return sumofErrors
 
 def compute_costMSE():
 	sumofErrors=float(0)
-	for row in range(0, NUMBER_OF_TEST+1):
-		sumofErrors = sumofErrors + ((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36]- test[row][36]) ** 2)
+	for row in range(0, NUMBER_OF_TEST):
+		sumofErrors = sumofErrors + ((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[68] + mean_r[68]- test[row][68]) ** 2)
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
 
    	return sumofErrors
 
 def compute_costMAE():
 	sumofErrors=float(0)
-	for row in range(0, NUMBER_OF_TEST+1):
-		sumofErrors = sumofErrors + abs((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36] - test[row][36]))
+	for row in range(0, NUMBER_OF_TEST):
+		sumofErrors = sumofErrors + abs((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[68] + mean_r[68] - test[row][68]))
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
 
    	return sumofErrors
 
 #print compute_costMSETRAINING()
 #print compute_costMAETRAINING()
-print theta
+
 print compute_costMSE()
-print compute_costMAE()
+print compute_costMSETRAINING()
 
 
 

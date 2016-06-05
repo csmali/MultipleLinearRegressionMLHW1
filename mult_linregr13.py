@@ -164,8 +164,11 @@ def readExcel(rowArray,startIndexofRowArray,LastIndexofRowArray):
 						sample.append(-1)
 					else:
 						sample.append(0)
+				elif cell==30:
+					sample.append(sheet.cell(row,cell+2).value)
 				else:
 					sample.append(sheet.cell(row,cell).value)
+
 			rowArray.append(sample)
 
 	return rowArray
@@ -255,7 +258,7 @@ def compute_costMAE():
 
 #print compute_costMSETRAINING()
 #print compute_costMAETRAINING()
-print theta
+
 print compute_costMSE()
 print compute_costMAE()
 

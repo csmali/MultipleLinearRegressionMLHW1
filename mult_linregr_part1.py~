@@ -1,11 +1,12 @@
+
 from xlrd import open_workbook
 import copy
 
 #Evaluate the linear regression
 NUMBER_OF_STUDENTS=649
-NUMBER_OF_TEST = 130
-NUMBER_OF_TRAINING = 519
-wb = open_workbook('/home/mali/Desktop/MLHW1/MultipleLinearRegressionMLHW1/student-porxls.xls')
+NUMBER_OF_TEST = 349
+NUMBER_OF_TRAINING = 300
+wb = open_workbook('/home/mali/Desktop/python/MLhw1/student-por.xls')
 samples = []
 test = []
 mean_r=[]
@@ -14,7 +15,7 @@ std_r=[]
 def std_deviation(X,ind):
 	X_norm = copy.deepcopy(X)
 	tempsum=float(0)
-	for columnIndex in range(0,ind):
+	for columnIndex in range(0,ind-1):
 		for sample in X_norm:
 			tempsum=tempsum + (sample[columnIndex]-mean_r[columnIndex])**2
 		std_r.append((tempsum / len(X_norm)) ** 0.5)
@@ -23,14 +24,14 @@ def std_deviation(X,ind):
 def feature_normalize(X,ind):
 	X_norm = copy.deepcopy(X)
 	tempsum=0
-	for columnIndex in range(0,ind):
+	for columnIndex in range(0,ind-1):
 		
 		for sample in X_norm:
 			tempsum=tempsum+sample[columnIndex]
 		mean_r.append(tempsum/len(X_norm))
 		tempsum=0
 	std_deviation(X,ind)
-	for columnIndex in range(0,ind):
+	for columnIndex in range(0,ind-1):
 		for sample in X_norm:
 			if std_r[columnIndex]>0:
 				sample[columnIndex]=(sample[columnIndex]-mean_r[columnIndex])/std_r[columnIndex]
@@ -43,9 +44,9 @@ theta = []
 for i in range(0,36):
 	theta.append(0)
 
-iterations = 300
+iterations = 100
 
-alpha = 0.001
+alpha = 0.005
 
 def gradient_descent(X,theta, alpha, num_iters):
 
@@ -170,12 +171,6 @@ def readExcel(rowArray,startIndexofRowArray,LastIndexofRowArray):
 
 	return rowArray
 
-'''
-samples= readExcel(samples,NUMBER_OF_TEST,650)
-samples = feature_normalize(samples,37)
-
-test =readExcel(test,1,NUMBER_OF_TEST)
-'''
 samples = readExcel(samples,1,NUMBER_OF_TRAINING)
 
 
@@ -192,7 +187,7 @@ for counter in range(0,NUMBER_OF_TEST-1):
 theta = gradient_descent(samples, theta, alpha, iterations)
 
 normalizedTestData = feature_normalize(test,36)
-#print theta
+print theta
 #print len(samples[1]), "length of every sample"
 
 #print len(theta) , "length"
@@ -201,46 +196,33 @@ normalizedTestData = feature_normalize(test,36)
 #print len(normalizedTestData[1]) , "length NTD"
 #print samples[1]
 
-print mean_r[36]
-#print len(samples)
-#for row in range(0, NUMBER_OF_TEST):	
-	#print sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36] , "   " ,row, ". data icin hesap"
+for row in range(0, NUMBER_OF_TEST+1):	
+	print sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta))) , "   " ,row, ". data icin hesap"
 '''
 def compute_costMSE():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TEST+1):
+
 		sumofErrors = sumofErrors + ((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))+mean_r[36] - test[row][36]) ** 2)
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
+
    	return sumofErrors
+
 def compute_costMAE():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TEST+1):
 		sumofErrors = sumofErrors + abs((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))+mean_r[36] - test[row][36]))
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
+
    	return sumofErrors
+
 '''
-def compute_costMSETRAINING():
-	sumofErrors=float(0)
-	for row in range(0, NUMBER_OF_TRAINING-2):
-
-		sumofErrors = sumofErrors + ((sum(samples[row][i]*theta[i] for i in range(len(theta)))- test[row][36]) ** 2)
-	sumofErrors = sumofErrors / NUMBER_OF_TRAINING-2
-
-   	return sumofErrors
-
-def compute_costMAETRAINING():
-	sumofErrors=float(0)
-	for row in range(0, NUMBER_OF_TRAINING-2):
-
-		sumofErrors = sumofErrors + ((sum(samples[row][i]*theta[i] for i in range(len(theta))) - test[row][36]))
-	sumofErrors = sumofErrors / NUMBER_OF_TRAINING-2
-
-   	return sumofErrors
 
 def compute_costMSE():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TEST+1):
-		sumofErrors = sumofErrors + ((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36]- test[row][36]) ** 2)
+
+		sumofErrors = sumofErrors + ((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))- test[row][36]) ** 2)
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
 
    	return sumofErrors
@@ -248,14 +230,11 @@ def compute_costMSE():
 def compute_costMAE():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TEST+1):
-		sumofErrors = sumofErrors + abs((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36] - test[row][36]))
+		print sumofErrors
+		sumofErrors = sumofErrors + abs((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta))) - test[row][36]))
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
 
    	return sumofErrors
-
-#print compute_costMSETRAINING()
-#print compute_costMAETRAINING()
-print theta
 print compute_costMSE()
 print compute_costMAE()
 
@@ -268,3 +247,6 @@ There still some blanks to fill
 I need to re-look all of the code
 For second task text parsing should be added.  May be logictic regression should be added as well.
 '''
+
+
+
