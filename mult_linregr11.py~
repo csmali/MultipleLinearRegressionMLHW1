@@ -220,7 +220,7 @@ def compute_costMSE():
 def compute_costMAE():
 	sumofErrors=float(0)
 	for row in range(0, NUMBER_OF_TEST-1):
-		sumofErrors = sumofErrors + abs(((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)-1))+theta[36])*std_r[36] + mean_r[36] - test[row][36]))
+		sumofErrors = sumofErrors + abs((sum(normalizedTestData[row][i]*theta[i] for i in range(len(theta)))*std_r[36] + mean_r[36] - test[row][36]))
 	sumofErrors = sumofErrors / NUMBER_OF_TEST
 
    	return sumofErrors
